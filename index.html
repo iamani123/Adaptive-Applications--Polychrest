@@ -1,0 +1,3890 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Ontospy > http://purl.org/ontology/fo/</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
+
+  <style type="text/css" media="screen">
+
+
+  body {
+	  margin-left: 6em;
+	  margin-right: 12em;
+	  text-align: justify;
+    padding: 2em 1em 2em 70px;
+    margin: 0;
+    font-family: sans-serif;
+    color: black;
+    background: white;
+    background-position: top left;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+  }
+
+  :link { color: #00C; background: transparent }
+  :visited { color: #00C; background: transparent }
+  a:active { color: #C00; background: transparent }
+
+  a:link img, a:visited img { border-style: none } /* no border on img links */
+
+  a:hover {color: white; background: #00C; }
+  a.backlink:hover {color: white; background: grey; }
+  a.greylink:hover {color: white; background: grey; }
+
+  .margintop {
+  	 margin-top: 40px;
+  }
+
+
+  dt, dd { margin-top: 10px; margin-bottom: 0 } /* opera 3.50 */
+  dt { font-weight: bold }
+
+
+  h1, h2, h3, h4, h5, h6 { text-align: left }
+  /* background should be transparent, but WebTV has a bug */
+  h1, h2, h3, h4, h5 { color: #005A9C; background: white }
+  h1.title { font: 200% sans-serif }
+  h1 { font: 170% sans-serif }
+  h2 { font: 140% sans-serif }
+  h3 { font: 120% sans-serif }
+  h4 { font: bold 100% sans-serif }
+  h5 { font: italic 100% sans-serif }
+  h6 { font: small-caps 100% sans-serif }
+
+  .hide { display: none }
+
+
+  pre { margin-left: 2em }
+
+  pre, code { font-family: monospace } /* navigator 4 requires this */
+
+
+  .implementation {
+  	background: aliceblue;
+	padding: 10px;
+	margin-top: 5px;
+  }
+
+  fieldset {
+	  margin-top: 20px;
+	  padding: 13px;
+      text-align: left;
+  }
+
+  legend {
+	  text-transform: uppercase;
+  }
+
+  .entity-div {
+	  margin: 55px 10px 30px 10px;
+  }
+
+  .entity-section {
+	  margin-bottom: 0px;
+  }
+
+
+  a.backlink {
+	  font-size: 80%;
+	  color: grey;
+  }
+
+  a.greylink {
+	  color: grey;
+  }
+
+
+   .implementation_title {
+
+       font-weight: bold;
+       font-size: 100%;
+   }
+
+.section-desc {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+
+
+
+        .tree-container {
+            width: 3000em;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+		.tree {margin: 10px 0px 30px -20px; padding: 0; display: inline-block;}
+
+		.tree ul {
+			padding-top: 20px; position: relative;
+
+			transition: all 0.5s;
+			-webkit-transition: all 0.5s;
+			-moz-transition: all 0.5s;
+		}
+
+		.tree li {
+			float: left; text-align: center;
+			list-style-type: none;
+			position: relative;
+			padding: 20px 5px 0 5px;
+
+			transition: all 0.5s;
+			-webkit-transition: all 0.5s;
+			-moz-transition: all 0.5s;
+		}
+
+		/*We will use ::before and ::after to draw the connectors*/
+
+		.tree li::before, .tree li::after{
+			content: '';
+			position: absolute; top: 0; right: 50%;
+			border-top: 1px solid #ccc;
+			width: 50%; height: 20px;
+		}
+		.tree li::after{
+			right: auto; left: 50%;
+			border-left: 1px solid #ccc;
+		}
+
+		/*We need to remove left-right connectors from elements without
+		any siblings*/
+		.tree li:only-child::after, .tree li:only-child::before {
+			display: none;
+		}
+
+		/*Remove space from the top of single children*/
+		.tree li:only-child{ padding-top: 0;}
+
+		/*Remove left connector from first child and
+		right connector from last child*/
+		.tree li:first-child::before, .tree li:last-child::after{
+			border: 0 none;
+		}
+		/*Adding back the vertical connector to the last nodes*/
+		.tree li:last-child::before{
+			border-right: 1px solid #ccc;
+			border-radius: 0 5px 0 0;
+			-webkit-border-radius: 0 5px 0 0;
+			-moz-border-radius: 0 5px 0 0;
+		}
+		.tree li:first-child::after{
+			border-radius: 5px 0 0 0;
+			-webkit-border-radius: 5px 0 0 0;
+			-moz-border-radius: 5px 0 0 0;
+		}
+
+		/*Time to add downward connectors from parents*/
+		.tree ul ul::before{
+			content: '';
+			position: absolute; top: 0; left: 50%;
+			border-left: 1px solid #ccc;
+			width: 0; height: 20px;
+		}
+
+		.tree li a{
+			border: 1px solid #ccc;
+			padding: 5px 10px;
+			text-decoration: none;
+			color: #666;
+			font-family: arial, verdana, tahoma;
+			font-size: 11px;
+			display: inline-block;
+
+			border-radius: 5px;
+			-webkit-border-radius: 5px;
+			-moz-border-radius: 5px;
+
+			transition: all 0.5s;
+			-webkit-transition: all 0.5s;
+			-moz-transition: all 0.5s;
+		}
+
+		/*Time for some hover effects*/
+		/*We will apply the hover effect the the lineage of the element also*/
+		.tree li a:hover, .tree li a:hover+ul li a {
+			background: #c8e4f8; color: #000; border: 1px solid #94a0b4;
+		}
+		/*Connector styles on hover*/
+		.tree li a:hover+ul li::after,
+		.tree li a:hover+ul li::before,
+		.tree li a:hover+ul::before,
+		.tree li a:hover+ul ul::before{
+			border-color:  #94a0b4;
+		}
+
+		/*Thats all. I hope you enjoyed it.
+		Thanks :)*/
+
+
+  </style>
+
+
+</head>
+
+
+<body>
+
+
+    
+	<h1 class="title">Graph:&nbsp;<a href="" target="_blank">http://purl.org/ontology/fo/</a></h1>
+	<h3>A simple vocabulary for describing recipes, ingredients, menus and diets.</h3>
+
+	<p><small>Ontology documentation automatically generated by <a class="greylink" href="http://lambdamusic.github.io/Ontospy/">Ontospy</a> on 10th March 2019 01:43</small></p>
+
+
+
+	
+
+
+	<hr class="margintop">
+
+	<h1><a name="toc">&nbsp;</a>Table of Content</h1>
+
+	<ul>
+		
+		<li><a href="#a-z">A-Z of Terms</a></li>
+		<li><a href="#classes">Classes</a></li>
+		<li><a href="#objproperties">Object Properties</a></li>
+		<li><a href="#dataproperties">Datatype properties</a></li>
+		
+		
+
+		
+
+	</ul>
+
+
+
+
+	
+
+	
+
+
+
+
+	
+
+	<hr class="margintop">
+	<h1><a  name="a-z">&nbsp;</a>A-Z of terms</h1>
+
+	<div id="azterms">
+
+	This is a complete alphabetical A-Z index of all terms, by main logical type.
+
+	
+		<fieldset> <legend>Classes (21)</legend>
+			<span><a href="#base:food">base:food</a></span>
+			|
+			<span><a href="#base:shopping">base:shopping</a></span>
+			|
+			<span><a href="#base:user">base:user</a></span>
+			|
+			<span><a href="#dcmit:Collection">dcmit:Collection</a></span>
+			|
+			<span><a href="#fo:Collection">fo:Collection</a></span>
+			|
+			<span><a href="#fo:Course">fo:Course</a></span>
+			|
+			<span><a href="#fo:Cuisine">fo:Cuisine</a></span>
+			|
+			<span><a href="#fo:Diet">fo:Diet</a></span>
+			|
+			<span><a href="#fo:Food">fo:Food</a></span>
+			|
+			<span><a href="#fo:Ingredient">fo:Ingredient</a></span>
+			|
+			<span><a href="#fo:IngredientList">fo:IngredientList</a></span>
+			|
+			<span><a href="#fo:Menu">fo:Menu</a></span>
+			|
+			<span><a href="#fo:Method">fo:Method</a></span>
+			|
+			<span><a href="#fo:Occasion">fo:Occasion</a></span>
+			|
+			<span><a href="#fo:Recipe">fo:Recipe</a></span>
+			|
+			<span><a href="#fo:Season">fo:Season</a></span>
+			|
+			<span><a href="#fo:ShoppingCategory">fo:ShoppingCategory</a></span>
+			|
+			<span><a href="#fo:Stage">fo:Stage</a></span>
+			|
+			<span><a href="#fo:StageSequence">fo:StageSequence</a></span>
+			|
+			<span><a href="#fo:Step">fo:Step</a></span>
+			|
+			<span><a href="#fo:Technique">fo:Technique</a></span>
+			
+			
+		</fieldset>
+	
+
+	
+
+	<fieldset> <legend>Object Properties (22)</legend>
+		&nbsp;<a href="#base:atShop">base:atShop</a>
+		|  <a href="#base:availableAt">base:availableAt</a>
+		|  <a href="#base:bought">base:bought</a>
+		|  <a href="#base:sells">base:sells</a>
+		|  <a href="#base:shopped">base:shopped</a>
+		|  <a href="#fo:at_its_best">fo:at_its_best</a>
+		|  <a href="#fo:canape">fo:canape</a>
+		|  <a href="#fo:cuisine">fo:cuisine</a>
+		|  <a href="#fo:dessert">fo:dessert</a>
+		|  <a href="#fo:diet">fo:diet</a>
+		|  <a href="#fo:food">fo:food</a>
+		|  <a href="#fo:ingredients">fo:ingredients</a>
+		|  <a href="#fo:main_course">fo:main_course</a>
+		|  <a href="#fo:method">fo:method</a>
+		|  <a href="#fo:occasion">fo:occasion</a>
+		|  <a href="#fo:produces">fo:produces</a>
+		|  <a href="#fo:required_technique">fo:required_technique</a>
+		|  <a href="#fo:serve_as">fo:serve_as</a>
+		|  <a href="#fo:shopping_category">fo:shopping_category</a>
+		|  <a href="#fo:side_dish">fo:side_dish</a>
+		|  <a href="#fo:stages">fo:stages</a>
+		|  <a href="#fo:starter">fo:starter</a>
+		  
+	</fieldset>
+
+	
+
+	
+	<fieldset> <legend>Datatype Properties (14)</legend>
+		&nbsp;<a href="#base:atDateTime">base:atDateTime</a>
+		|  <a href="#base:atPrice">base:atPrice</a>
+		|  <a href="#base:atTime">base:atTime</a>
+		|  <a href="#base:hasGoal">base:hasGoal</a>
+		|  <a href="#base:hasName">base:hasName</a>
+		|  <a href="#base:hasShopAddress">base:hasShopAddress</a>
+		|  <a href="#base:hasShopName">base:hasShopName</a>
+		|  <a href="#base:hasShopType">base:hasShopType</a>
+		|  <a href="#base:ofCategory">base:ofCategory</a>
+		|  <a href="#fo:imperial_quantity">fo:imperial_quantity</a>
+		|  <a href="#fo:instruction">fo:instruction</a>
+		|  <a href="#fo:metric_quantity">fo:metric_quantity</a>
+		|  <a href="#fo:quantity">fo:quantity</a>
+		|  <a href="#fo:serves">fo:serves</a>
+		  
+	</fieldset>
+	
+
+	
+
+	
+
+
+	</div>
+
+
+
+	
+
+
+	
+
+		<hr class="margintop">
+		<h1 class="margintop" ><a name="classes">&nbsp;</a>Classes</h1>
+
+			
+
+			<div class="entity-div">
+
+
+
+				<h3 class="entity-section">Class: <a name="base:food" href="#base:food">base:food</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+
+                <div class="tree-container">
+                <div class="tree">
+                    <ul>
+                        
+
+                            <li href="#"><a>owl:Thing</a>
+
+                            <ul>
+                              <li><a style="font-weight: bold;">base:food</a>
+
+                              
+                                </li>
+
+                            </ul>
+
+                            </li>
+                        
+
+                    </ul>
+                </div>
+                </div>
+
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> base:food is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    
+                </p>
+
+                
+                    <p class="section-desc"><b>Inherits from:</b> <br />owl:Thing</p>
+				
+
+
+
+				
+					<p class="section-desc"><b>Property Domain of:</b>
+                        <br>
+                        <a href="#base:atPrice">base:atPrice</a> | <a href="#base:hasShopAddress">base:hasShopAddress</a> | <a href="#base:hasShopName">base:hasShopName</a> | <a href="#base:hasShopType">base:hasShopType</a> | <a href="#base:ofCategory">base:ofCategory</a> | <a href="#base:availableAt">base:availableAt</a>  
+                    </p>
+				
+
+				
+					<p class="section-desc"><b>Property Range of:</b>
+                        <br>
+                        <a href="#base:atShop">base:atShop</a> | <a href="#base:availableAt">base:availableAt</a> | <a href="#base:bought">base:bought</a>  
+                    </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>base:food a owl:Class ;<br>    rdfs:label &quot;any grocery shop&quot;@en,<br>        &quot;food&quot;@en ;<br>    owl:sameAs &lt;http://dbpedia.org/ontology/Food&gt;,<br>        &lt;http://dbpedia.org/ontology/Shop&gt;,<br>        fo:Food .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+
+			
+
+			<div class="entity-div">
+
+
+
+				<h3 class="entity-section">Class: <a name="base:shopping" href="#base:shopping">base:shopping</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+
+                <div class="tree-container">
+                <div class="tree">
+                    <ul>
+                        
+
+                            <li href="#"><a>owl:Thing</a>
+
+                            <ul>
+                              <li><a style="font-weight: bold;">base:shopping</a>
+
+                              
+                                </li>
+
+                            </ul>
+
+                            </li>
+                        
+
+                    </ul>
+                </div>
+                </div>
+
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> base:shopping is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    
+                </p>
+
+                
+                    <p class="section-desc"><b>Inherits from:</b> <br />owl:Thing</p>
+				
+
+
+
+				
+					<p class="section-desc"><b>Property Domain of:</b>
+                        <br>
+                        <a href="#base:atDateTime">base:atDateTime</a> | <a href="#base:atTime">base:atTime</a> | <a href="#base:atShop">base:atShop</a> | <a href="#base:bought">base:bought</a>  
+                    </p>
+				
+
+				
+					<p class="section-desc"><b>Property Range of:</b>
+                        <br>
+                        <a href="#base:shopped">base:shopped</a>  
+                    </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>base:shopping a owl:Class ;<br>    rdfs:label &quot;user shopping details&quot;@en .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+
+			
+
+			<div class="entity-div">
+
+
+
+				<h3 class="entity-section">Class: <a name="base:user" href="#base:user">base:user</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+
+                <div class="tree-container">
+                <div class="tree">
+                    <ul>
+                        
+
+                            <li href="#"><a>owl:Thing</a>
+
+                            <ul>
+                              <li><a style="font-weight: bold;">base:user</a>
+
+                              
+                                </li>
+
+                            </ul>
+
+                            </li>
+                        
+
+                    </ul>
+                </div>
+                </div>
+
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> base:user is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    
+                </p>
+
+                
+                    <p class="section-desc"><b>Inherits from:</b> <br />owl:Thing</p>
+				
+
+
+
+				
+					<p class="section-desc"><b>Property Domain of:</b>
+                        <br>
+                        <a href="#base:hasGoal">base:hasGoal</a> | <a href="#base:hasName">base:hasName</a> | <a href="#base:shopped">base:shopped</a>  
+                    </p>
+				
+
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>base:user a owl:Class ;<br>    rdfs:label &quot;app user&quot;@en .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+
+			
+
+			<div class="entity-div">
+
+
+
+				<h3 class="entity-section">Class: <a name="dcmit:Collection" href="#dcmit:Collection">dcmit:Collection</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+
+                <div class="tree-container">
+                <div class="tree">
+                    <ul>
+                        
+
+                            <li href="#"><a>owl:Thing</a>
+
+                            <ul>
+                              <li><a style="font-weight: bold;">dcmit:Collection</a>
+
+                              
+                                  <ul>
+                                    <li><a href="#fo:Collection">fo:Collection</a></li>
+                                  </ul>
+                              
+                                </li>
+
+                            </ul>
+
+                            </li>
+                        
+
+                    </ul>
+                </div>
+                </div>
+
+
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    
+                </p>
+
+                
+                    <p class="section-desc"><b>Inherits from:</b> <br />owl:Thing</p>
+				
+
+
+
+				
+
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>None</p></code>
+				</div>
+
+			</div>
+
+
+			
+
+			<div class="entity-div">
+
+
+
+				<h3 class="entity-section">Class: <a name="fo:Collection" href="#fo:Collection">fo:Collection</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+
+                <div class="tree-container">
+                <div class="tree">
+                    <ul>
+                        
+                            <li> <a href="#dcmit:Collection">dcmit:Collection</a>
+
+                            <ul>
+
+                              <li><a style="font-weight: bold;">fo:Collection</a>
+
+                              
+                                  <ul>
+                                    <li><a href="#fo:Menu">fo:Menu</a></li>
+                                  </ul>
+                              
+                                </li>
+
+                            </ul>
+
+                            </li>
+                            
+
+                        
+
+                    </ul>
+                </div>
+                </div>
+
+
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    A Collection is a group of recipes that are brought together because they have something in common. Some collections may result from automated queries such as all recipes that share a particular ingredient, other collections may be the result of editorial selection.
+                </p>
+
+                
+					<p class="section-desc"><b>Inherits from <small>(1)</small>:</b>
+                        <br />
+                        <a href="#dcmit:Collection">dcmit:Collection</a>  
+                    </p>
+				
+
+
+
+				
+
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:Collection a owl:Class ;<br>    rdfs:label &quot;Collection&quot;@en-gb ;<br>    rdfs:comment &quot;A Collection is a group of recipes that are brought together because they have something in common. Some collections may result from automated queries such as all recipes that share a particular ingredient, other collections may be the result of editorial selection.&quot;@en-gb ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:subClassOf dctypes:Collection ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+
+			
+
+			<div class="entity-div">
+
+
+
+				<h3 class="entity-section">Class: <a name="fo:Course" href="#fo:Course">fo:Course</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+
+                <div class="tree-container">
+                <div class="tree">
+                    <ul>
+                        
+
+                            <li href="#"><a>owl:Thing</a>
+
+                            <ul>
+                              <li><a style="font-weight: bold;">fo:Course</a>
+
+                              
+                                </li>
+
+                            </ul>
+
+                            </li>
+                        
+
+                    </ul>
+                </div>
+                </div>
+
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:Course is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    A Course is the sequence of a dish within a meal. For example a basic dinner party may consists of Starter, Main and Dessert courses.
+                </p>
+
+                
+                    <p class="section-desc"><b>Inherits from:</b> <br />owl:Thing</p>
+				
+
+
+
+				
+
+				
+					<p class="section-desc"><b>Property Range of:</b>
+                        <br>
+                        <a href="#fo:serve_as">fo:serve_as</a>  
+                    </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:Course a owl:Class ;<br>    rdfs:label &quot;Course&quot;@en-gb ;<br>    rdfs:comment &quot;A Course is the sequence of a dish within a meal. For example a basic dinner party may consists of Starter, Main and Dessert courses.&quot;@en-gb ;<br>    rdfs:isDefinedBy fo: ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+
+			
+
+			<div class="entity-div">
+
+
+
+				<h3 class="entity-section">Class: <a name="fo:Cuisine" href="#fo:Cuisine">fo:Cuisine</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+
+                <div class="tree-container">
+                <div class="tree">
+                    <ul>
+                        
+
+                            <li href="#"><a>owl:Thing</a>
+
+                            <ul>
+                              <li><a style="font-weight: bold;">fo:Cuisine</a>
+
+                              
+                                </li>
+
+                            </ul>
+
+                            </li>
+                        
+
+                    </ul>
+                </div>
+                </div>
+
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:Cuisine is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    A Cuisine is a particular style of food, often based on a region. These classifications are often highly subjective.
+                </p>
+
+                
+                    <p class="section-desc"><b>Inherits from:</b> <br />owl:Thing</p>
+				
+
+
+
+				
+
+				
+					<p class="section-desc"><b>Property Range of:</b>
+                        <br>
+                        <a href="#fo:cuisine">fo:cuisine</a>  
+                    </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:Cuisine a owl:Class ;<br>    rdfs:label &quot;Cuisine&quot;@en-gb ;<br>    rdfs:comment &quot;A Cuisine is a particular style of food, often based on a region. These classifications are often highly subjective.&quot;@en-gb ;<br>    rdfs:isDefinedBy fo: ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+
+			
+
+			<div class="entity-div">
+
+
+
+				<h3 class="entity-section">Class: <a name="fo:Diet" href="#fo:Diet">fo:Diet</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+
+                <div class="tree-container">
+                <div class="tree">
+                    <ul>
+                        
+
+                            <li href="#"><a>owl:Thing</a>
+
+                            <ul>
+                              <li><a style="font-weight: bold;">fo:Diet</a>
+
+                              
+                                </li>
+
+                            </ul>
+
+                            </li>
+                        
+
+                    </ul>
+                </div>
+                </div>
+
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:Diet is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    A Diet is a way of selecting food that achieves a particular effect, such as eating in way that is pregnancy-friendly or avoiding foods that contain shellfish.
+                </p>
+
+                
+                    <p class="section-desc"><b>Inherits from:</b> <br />owl:Thing</p>
+				
+
+
+
+				
+
+				
+					<p class="section-desc"><b>Property Range of:</b>
+                        <br>
+                        <a href="#fo:diet">fo:diet</a>  
+                    </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:Diet a owl:Class ;<br>    rdfs:label &quot;Diet&quot;@en-gb ;<br>    rdfs:comment &quot;A Diet is a way of selecting food that achieves a particular effect, such as eating in way that is pregnancy-friendly or avoiding foods that contain shellfish.&quot;@en-gb ;<br>    rdfs:isDefinedBy fo: ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+
+			
+
+			<div class="entity-div">
+
+
+
+				<h3 class="entity-section">Class: <a name="fo:Food" href="#fo:Food">fo:Food</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+
+                <div class="tree-container">
+                <div class="tree">
+                    <ul>
+                        
+
+                            <li href="#"><a>owl:Thing</a>
+
+                            <ul>
+                              <li><a style="font-weight: bold;">fo:Food</a>
+
+                              
+                                </li>
+
+                            </ul>
+
+                            </li>
+                        
+
+                    </ul>
+                </div>
+                </div>
+
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:Food is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    A Food is something that can be eaten. It may be a basic food such as salt or it may be the more complex result of another recipe, for example chicken stock. A recipe uses foods as part of ingredients and also produces foods to be eaten.
+                </p>
+
+                
+                    <p class="section-desc"><b>Inherits from:</b> <br />owl:Thing</p>
+				
+
+
+
+				
+					<p class="section-desc"><b>Property Domain of:</b>
+                        <br>
+                        <a href="#fo:at_its_best">fo:at_its_best</a> | <a href="#fo:shopping_category">fo:shopping_category</a>  
+                    </p>
+				
+
+				
+					<p class="section-desc"><b>Property Range of:</b>
+                        <br>
+                        <a href="#fo:food">fo:food</a> | <a href="#fo:produces">fo:produces</a>  
+                    </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:Food a owl:Class ;<br>    rdfs:label &quot;Food&quot;@en-gb ;<br>    rdfs:comment &quot;A Food is something that can be eaten. It may be a basic food such as salt or it may be the more complex result of another recipe, for example chicken stock. A recipe uses foods as part of ingredients and also produces foods to be eaten.&quot;@en-gb ;<br>    rdfs:isDefinedBy fo: ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+
+			
+
+			<div class="entity-div">
+
+
+
+				<h3 class="entity-section">Class: <a name="fo:Ingredient" href="#fo:Ingredient">fo:Ingredient</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+
+                <div class="tree-container">
+                <div class="tree">
+                    <ul>
+                        
+
+                            <li href="#"><a>owl:Thing</a>
+
+                            <ul>
+                              <li><a style="font-weight: bold;">fo:Ingredient</a>
+
+                              
+                                </li>
+
+                            </ul>
+
+                            </li>
+                        
+
+                    </ul>
+                </div>
+                </div>
+
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:Ingredient is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    An Ingredient is the combination of a quantity and a food, giving the amount of something that should be used in the recipe.
+                </p>
+
+                
+                    <p class="section-desc"><b>Inherits from:</b> <br />owl:Thing</p>
+				
+
+
+
+				
+					<p class="section-desc"><b>Property Domain of:</b>
+                        <br>
+                        <a href="#fo:imperial_quantity">fo:imperial_quantity</a> | <a href="#fo:metric_quantity">fo:metric_quantity</a> | <a href="#fo:quantity">fo:quantity</a> | <a href="#fo:food">fo:food</a>  
+                    </p>
+				
+
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:Ingredient a owl:Class ;<br>    rdfs:label &quot;Ingredient&quot;@en-gb ;<br>    rdfs:comment &quot;An Ingredient is the combination of a quantity and a food, giving the amount of something that should be used in the recipe.&quot;@en-gb ;<br>    rdfs:isDefinedBy fo: ;<br>    owl:sameAs v:Ingredient ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+
+			
+
+			<div class="entity-div">
+
+
+
+				<h3 class="entity-section">Class: <a name="fo:IngredientList" href="#fo:IngredientList">fo:IngredientList</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+
+                <div class="tree-container">
+                <div class="tree">
+                    <ul>
+                        
+
+                            <li href="#"><a>owl:Thing</a>
+
+                            <ul>
+                              <li><a style="font-weight: bold;">fo:IngredientList</a>
+
+                              
+                                </li>
+
+                            </ul>
+
+                            </li>
+                        
+
+                    </ul>
+                </div>
+                </div>
+
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:IngredientList is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    An IngredientList is a sequence (rdf:Seq) of ingredients in the order they should be listed in the recipe.
+                </p>
+
+                
+                    <p class="section-desc"><b>Inherits from:</b> <br />owl:Thing</p>
+				
+
+
+
+				
+
+				
+					<p class="section-desc"><b>Property Range of:</b>
+                        <br>
+                        <a href="#fo:ingredients">fo:ingredients</a>  
+                    </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:IngredientList a owl:Class ;<br>    rdfs:label &quot;IngredientList&quot;@en-gb ;<br>    rdfs:comment &quot;An IngredientList is a sequence (rdf:Seq) of ingredients in the order they should be listed in the recipe.&quot;@en-gb ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:subClassOf rdf:Seq ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+
+			
+
+			<div class="entity-div">
+
+
+
+				<h3 class="entity-section">Class: <a name="fo:Menu" href="#fo:Menu">fo:Menu</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+
+                <div class="tree-container">
+                <div class="tree">
+                    <ul>
+                        
+                            <li> <a href="#fo:Collection">fo:Collection</a>
+
+                            <ul>
+
+                              <li><a style="font-weight: bold;">fo:Menu</a>
+
+                              
+                                </li>
+
+                            </ul>
+
+                            </li>
+                            
+
+                        
+
+                    </ul>
+                </div>
+                </div>
+
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:Menu is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    A Menu is a collection of recipes, usually one or more per course, that have been selected to go well together. A Menu may also be related to a particular cuisine or occasion.
+                </p>
+
+                
+					<p class="section-desc"><b>Inherits from <small>(2)</small>:</b>
+                        <br />
+                        <a href="#fo:Collection">fo:Collection</a> | <a href="#dcmit:Collection">dcmit:Collection</a>  
+                    </p>
+				
+
+
+
+				
+					<p class="section-desc"><b>Property Domain of:</b>
+                        <br>
+                        <a href="#fo:canape">fo:canape</a> | <a href="#fo:dessert">fo:dessert</a> | <a href="#fo:main_course">fo:main_course</a> | <a href="#fo:side_dish">fo:side_dish</a> | <a href="#fo:starter">fo:starter</a>  
+                    </p>
+				
+
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:Menu a owl:Class ;<br>    rdfs:label &quot;Menu&quot;@en-gb ;<br>    rdfs:comment &quot;A Menu is a collection of recipes, usually one or more per course, that have been selected to go well together. A Menu may also be related to a particular cuisine or occasion.&quot;@en-gb ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:subClassOf fo:Collection ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+
+			
+
+			<div class="entity-div">
+
+
+
+				<h3 class="entity-section">Class: <a name="fo:Method" href="#fo:Method">fo:Method</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+
+                <div class="tree-container">
+                <div class="tree">
+                    <ul>
+                        
+
+                            <li href="#"><a>owl:Thing</a>
+
+                            <ul>
+                              <li><a style="font-weight: bold;">fo:Method</a>
+
+                              
+                                </li>
+
+                            </ul>
+
+                            </li>
+                        
+
+                    </ul>
+                </div>
+                </div>
+
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:Method is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    A Method is the way in which ingredients are combined, using particular techniques, in order to produce a food. A method is part of a recipe and is also an rdf:Seq.
+                </p>
+
+                
+                    <p class="section-desc"><b>Inherits from:</b> <br />owl:Thing</p>
+				
+
+
+
+				
+
+				
+					<p class="section-desc"><b>Property Range of:</b>
+                        <br>
+                        <a href="#fo:method">fo:method</a>  
+                    </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:Method a owl:Class ;<br>    rdfs:label &quot;Method&quot;@en-gb ;<br>    rdfs:comment &quot;A Method is the way in which ingredients are combined, using particular techniques, in order to produce a food. A method is part of a recipe and is also an rdf:Seq.&quot;@en-gb ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:subClassOf rdf:Seq ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+
+			
+
+			<div class="entity-div">
+
+
+
+				<h3 class="entity-section">Class: <a name="fo:Occasion" href="#fo:Occasion">fo:Occasion</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+
+                <div class="tree-container">
+                <div class="tree">
+                    <ul>
+                        
+
+                            <li href="#"><a>owl:Thing</a>
+
+                            <ul>
+                              <li><a style="font-weight: bold;">fo:Occasion</a>
+
+                              
+                                </li>
+
+                            </ul>
+
+                            </li>
+                        
+
+                    </ul>
+                </div>
+                </div>
+
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:Occasion is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    An Occasion is a recognised event or type of event that a particular food may be suitable for. An exmaple of a particular occassion might be Chinese New Year, whereas a more general occassion might a birthday.
+                </p>
+
+                
+                    <p class="section-desc"><b>Inherits from:</b> <br />owl:Thing</p>
+				
+
+
+
+				
+
+				
+					<p class="section-desc"><b>Property Range of:</b>
+                        <br>
+                        <a href="#fo:occasion">fo:occasion</a>  
+                    </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:Occasion a owl:Class ;<br>    rdfs:label &quot;Occasion&quot;@en-gb ;<br>    rdfs:comment &quot;An Occasion is a recognised event or type of event that a particular food may be suitable for. An exmaple of a particular occassion might be Chinese New Year, whereas a more general occassion might a birthday.&quot;@en-gb ;<br>    rdfs:isDefinedBy fo: ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+
+			
+
+			<div class="entity-div">
+
+
+
+				<h3 class="entity-section">Class: <a name="fo:Recipe" href="#fo:Recipe">fo:Recipe</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+
+                <div class="tree-container">
+                <div class="tree">
+                    <ul>
+                        
+
+                            <li href="#"><a>owl:Thing</a>
+
+                            <ul>
+                              <li><a style="font-weight: bold;">fo:Recipe</a>
+
+                              
+                                </li>
+
+                            </ul>
+
+                            </li>
+                        
+
+                    </ul>
+                </div>
+                </div>
+
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:Recipe is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    A Recipe is a combination of ingredients and a method, created by a chef, that produces a food.
+                </p>
+
+                
+                    <p class="section-desc"><b>Inherits from:</b> <br />owl:Thing</p>
+				
+
+
+
+				
+					<p class="section-desc"><b>Property Domain of:</b>
+                        <br>
+                        <a href="#fo:serves">fo:serves</a> | <a href="#fo:cuisine">fo:cuisine</a> | <a href="#fo:diet">fo:diet</a> | <a href="#fo:occasion">fo:occasion</a> | <a href="#fo:produces">fo:produces</a> | <a href="#fo:serve_as">fo:serve_as</a> | <a href="#fo:stages">fo:stages</a>  
+                    </p>
+				
+
+				
+					<p class="section-desc"><b>Property Range of:</b>
+                        <br>
+                        <a href="#fo:canape">fo:canape</a> | <a href="#fo:dessert">fo:dessert</a> | <a href="#fo:main_course">fo:main_course</a> | <a href="#fo:side_dish">fo:side_dish</a> | <a href="#fo:starter">fo:starter</a>  
+                    </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:Recipe a owl:Class ;<br>    rdfs:label &quot;Recipe&quot;@en-gb ;<br>    rdfs:comment &quot;A Recipe is a combination of ingredients and a method, created by a chef, that produces a food.&quot;@en-gb ;<br>    rdfs:isDefinedBy fo: ;<br>    owl:sameAs v:Recipe ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+
+			
+
+			<div class="entity-div">
+
+
+
+				<h3 class="entity-section">Class: <a name="fo:Season" href="#fo:Season">fo:Season</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+
+                <div class="tree-container">
+                <div class="tree">
+                    <ul>
+                        
+
+                            <li href="#"><a>owl:Thing</a>
+
+                            <ul>
+                              <li><a style="font-weight: bold;">fo:Season</a>
+
+                              
+                                </li>
+
+                            </ul>
+
+                            </li>
+                        
+
+                    </ul>
+                </div>
+                </div>
+
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:Season is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    A Season is a period of time that recurs annually during which a food is typically available or at its best.
+                </p>
+
+                
+                    <p class="section-desc"><b>Inherits from:</b> <br />owl:Thing</p>
+				
+
+
+
+				
+
+				
+					<p class="section-desc"><b>Property Range of:</b>
+                        <br>
+                        <a href="#fo:at_its_best">fo:at_its_best</a>  
+                    </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:Season a owl:Class ;<br>    rdfs:label &quot;Season&quot;@en-gb ;<br>    rdfs:comment &quot;A Season is a period of time that recurs annually during which a food is typically available or at its best.&quot;@en-gb ;<br>    rdfs:isDefinedBy fo: ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+
+			
+
+			<div class="entity-div">
+
+
+
+				<h3 class="entity-section">Class: <a name="fo:ShoppingCategory" href="#fo:ShoppingCategory">fo:ShoppingCategory</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+
+                <div class="tree-container">
+                <div class="tree">
+                    <ul>
+                        
+
+                            <li href="#"><a>owl:Thing</a>
+
+                            <ul>
+                              <li><a style="font-weight: bold;">fo:ShoppingCategory</a>
+
+                              
+                                </li>
+
+                            </ul>
+
+                            </li>
+                        
+
+                    </ul>
+                </div>
+                </div>
+
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:ShoppingCategory is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    A Shopping Category is a classification given to a food to indicate where it may be found when shopping.
+                </p>
+
+                
+                    <p class="section-desc"><b>Inherits from:</b> <br />owl:Thing</p>
+				
+
+
+
+				
+
+				
+					<p class="section-desc"><b>Property Range of:</b>
+                        <br>
+                        <a href="#fo:shopping_category">fo:shopping_category</a>  
+                    </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:ShoppingCategory a owl:Class ;<br>    rdfs:label &quot;ShoppingCategory&quot;@en-gb ;<br>    rdfs:comment &quot;A Shopping Category is a classification given to a food to indicate where it may be found when shopping.&quot;@en-gb ;<br>    rdfs:isDefinedBy fo: ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+
+			
+
+			<div class="entity-div">
+
+
+
+				<h3 class="entity-section">Class: <a name="fo:Stage" href="#fo:Stage">fo:Stage</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+
+                <div class="tree-container">
+                <div class="tree">
+                    <ul>
+                        
+
+                            <li href="#"><a>owl:Thing</a>
+
+                            <ul>
+                              <li><a style="font-weight: bold;">fo:Stage</a>
+
+                              
+                                </li>
+
+                            </ul>
+
+                            </li>
+                        
+
+                    </ul>
+                </div>
+                </div>
+
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:Stage is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    A Stage is a part of a recipe that may have its own ingredient list and/or method. It allows the different parts of a multi-part recipe to be modelled seperately, yet as part of the same recipe.
+                </p>
+
+                
+                    <p class="section-desc"><b>Inherits from:</b> <br />owl:Thing</p>
+				
+
+
+
+				
+
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:Stage a owl:Class ;<br>    rdfs:label &quot;Stage&quot;@en-gb ;<br>    rdfs:comment &quot;A Stage is a part of a recipe that may have its own ingredient list and/or method. It allows the different parts of a multi-part recipe to be modelled seperately, yet as part of the same recipe.&quot;@en-gb ;<br>    rdfs:isDefinedBy fo: ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+
+			
+
+			<div class="entity-div">
+
+
+
+				<h3 class="entity-section">Class: <a name="fo:StageSequence" href="#fo:StageSequence">fo:StageSequence</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+
+                <div class="tree-container">
+                <div class="tree">
+                    <ul>
+                        
+
+                            <li href="#"><a>owl:Thing</a>
+
+                            <ul>
+                              <li><a style="font-weight: bold;">fo:StageSequence</a>
+
+                              
+                                </li>
+
+                            </ul>
+
+                            </li>
+                        
+
+                    </ul>
+                </div>
+                </div>
+
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:StageSequence is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    Where a recipe has a number of stage, for example where a recipe states &#39;for the sauce&#39; a stage sequence provides a way to sequence the stages (rdf:Seq) into the desired order.
+                </p>
+
+                
+                    <p class="section-desc"><b>Inherits from:</b> <br />owl:Thing</p>
+				
+
+
+
+				
+
+				
+					<p class="section-desc"><b>Property Range of:</b>
+                        <br>
+                        <a href="#fo:stages">fo:stages</a>  
+                    </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:StageSequence a owl:Class ;<br>    rdfs:label &quot;StageSequence&quot;@en-gb ;<br>    rdfs:comment &quot;Where a recipe has a number of stage, for example where a recipe states &#39;for the sauce&#39; a stage sequence provides a way to sequence the stages (rdf:Seq) into the desired order.&quot;@en-gb ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:subClassOf rdf:Seq ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+
+			
+
+			<div class="entity-div">
+
+
+
+				<h3 class="entity-section">Class: <a name="fo:Step" href="#fo:Step">fo:Step</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+
+                <div class="tree-container">
+                <div class="tree">
+                    <ul>
+                        
+
+                            <li href="#"><a>owl:Thing</a>
+
+                            <ul>
+                              <li><a style="font-weight: bold;">fo:Step</a>
+
+                              
+                                </li>
+
+                            </ul>
+
+                            </li>
+                        
+
+                    </ul>
+                </div>
+                </div>
+
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:Step is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    A Step is the lowest level of instruction used in a recipe. A sequence of steps form a method.
+                </p>
+
+                
+                    <p class="section-desc"><b>Inherits from:</b> <br />owl:Thing</p>
+				
+
+
+
+				
+					<p class="section-desc"><b>Property Domain of:</b>
+                        <br>
+                        <a href="#fo:instruction">fo:instruction</a>  
+                    </p>
+				
+
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:Step a owl:Class ;<br>    rdfs:label &quot;Step&quot;@en-gb ;<br>    rdfs:comment &quot;A Step is the lowest level of instruction used in a recipe. A sequence of steps form a method.&quot;@en-gb ;<br>    rdfs:isDefinedBy fo: ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+
+			
+
+			<div class="entity-div">
+
+
+
+				<h3 class="entity-section">Class: <a name="fo:Technique" href="#fo:Technique">fo:Technique</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+
+                <div class="tree-container">
+                <div class="tree">
+                    <ul>
+                        
+
+                            <li href="#"><a>owl:Thing</a>
+
+                            <ul>
+                              <li><a style="font-weight: bold;">fo:Technique</a>
+
+                              
+                                </li>
+
+                            </ul>
+
+                            </li>
+                        
+
+                    </ul>
+                </div>
+                </div>
+
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:Technique is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    A Technique is a way of working with an ingredient to produce a desired effect, for example, whipping cream.
+                </p>
+
+                
+                    <p class="section-desc"><b>Inherits from:</b> <br />owl:Thing</p>
+				
+
+
+
+				
+
+				
+					<p class="section-desc"><b>Property Range of:</b>
+                        <br>
+                        <a href="#fo:required_technique">fo:required_technique</a>  
+                    </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:Technique a owl:Class ;<br>    rdfs:label &quot;Technique&quot;@en-gb ;<br>    rdfs:comment &quot;A Technique is a way of working with an ingredient to produce a desired effect, for example, whipping cream.&quot;@en-gb ;<br>    rdfs:isDefinedBy fo: ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+
+			
+
+	
+
+
+
+	
+
+	
+
+		<hr class="margintop">
+		<h1 class="margintop"><a name="objproperties">&nbsp;</a>Object Properties</h1>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="base:atShop" href="#base:atShop">base:atShop</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> base:atShop is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#base:shopping">base:shopping</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#base:food">base:food</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>base:atShop a owl:ObjectProperty ;<br>    rdfs:label &quot;the user shopped at this shop&quot;@en ;<br>    rdfs:domain base:shopping ;<br>    rdfs:range base:food .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="base:availableAt" href="#base:availableAt">base:availableAt</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> base:availableAt is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#base:food">base:food</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#base:food">base:food</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>base:availableAt a owl:ObjectProperty ;<br>    rdfs:label &quot;food item is available at this shop&quot;@en ;<br>    rdfs:domain base:food ;<br>    rdfs:range base:food .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="base:bought" href="#base:bought">base:bought</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> base:bought is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#base:shopping">base:shopping</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#base:food">base:food</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>base:bought a owl:ObjectProperty ;<br>    rdfs:label &quot;the user bought this item&quot;@en ;<br>    rdfs:domain base:shopping ;<br>    rdfs:range base:food .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="base:sells" href="#base:sells">base:sells</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> base:sells is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>base:sells a owl:ObjectProperty ;<br>    rdfs:label &quot;this shop sells the food item&quot;@en ;<br>    owl:inverseOf base:availableAt .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="base:shopped" href="#base:shopped">base:shopped</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> base:shopped is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#base:user">base:user</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#base:shopping">base:shopping</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>base:shopped a owl:ObjectProperty ;<br>    rdfs:label &quot;the user shopped this shopping&quot;@en ;<br>    rdfs:domain base:user ;<br>    rdfs:range base:shopping .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="fo:at_its_best" href="#fo:at_its_best">fo:at_its_best</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:at_its_best is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    The at its best property tells us in what season a particular food is at its best.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#fo:Food">fo:Food</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#fo:Season">fo:Season</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:at_its_best a owl:ObjectProperty ;<br>    rdfs:label &quot;at its best&quot;@en-gb ;<br>    rdfs:comment &quot;The at its best property tells us in what season a particular food is at its best.&quot;@en-gb ;<br>    rdfs:domain fo:Food ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range fo:Season ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="fo:canape" href="#fo:canape">fo:canape</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:canape is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    The canape property relates a menu to a recipe that may be served as a canape.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#fo:Menu">fo:Menu</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#fo:Recipe">fo:Recipe</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:canape a owl:ObjectProperty ;<br>    rdfs:label &quot;canape&quot;@en-gb ;<br>    rdfs:comment &quot;The canape property relates a menu to a recipe that may be served as a canape.&quot;@en-gb ;<br>    rdfs:domain fo:Menu ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range fo:Recipe ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="fo:cuisine" href="#fo:cuisine">fo:cuisine</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:cuisine is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    The cuisine property classifies a recipe as being an example of that cuisine.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#fo:Recipe">fo:Recipe</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#fo:Cuisine">fo:Cuisine</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:cuisine a owl:ObjectProperty ;<br>    rdfs:label &quot;cuisine&quot;@en-gb ;<br>    rdfs:comment &quot;The cuisine property classifies a recipe as being an example of that cuisine.&quot;@en-gb ;<br>    rdfs:domain fo:Recipe ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range fo:Cuisine ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="fo:dessert" href="#fo:dessert">fo:dessert</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:dessert is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    The dessert property relates a menu to a recipe that may be served as a dessert.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#fo:Menu">fo:Menu</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#fo:Recipe">fo:Recipe</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:dessert a owl:ObjectProperty ;<br>    rdfs:label &quot;dessert&quot;@en-gb ;<br>    rdfs:comment &quot;The dessert property relates a menu to a recipe that may be served as a dessert.&quot;@en-gb ;<br>    rdfs:domain fo:Menu ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range fo:Recipe ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="fo:diet" href="#fo:diet">fo:diet</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:diet is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    The diet property relates a recipe to a diet it may be suitable for.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#fo:Recipe">fo:Recipe</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#fo:Diet">fo:Diet</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:diet a owl:ObjectProperty ;<br>    rdfs:label &quot;diet&quot;@en-gb ;<br>    rdfs:comment &quot;The diet property relates a recipe to a diet it may be suitable for.&quot;@en-gb ;<br>    rdfs:domain fo:Recipe ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range fo:Diet ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="fo:food" href="#fo:food">fo:food</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:food is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    The food property relates an ingredient to the food that is required.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#fo:Ingredient">fo:Ingredient</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#fo:Food">fo:Food</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:food a owl:ObjectProperty ;<br>    rdfs:label &quot;food&quot;@en-gb ;<br>    rdfs:comment &quot;The food property relates an ingredient to the food that is required.&quot;@en-gb ;<br>    rdfs:domain fo:Ingredient ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range fo:Food ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="fo:ingredients" href="#fo:ingredients">fo:ingredients</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:ingredients is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    The ingredients property relates a recipe or recipe stage to an ingredient list.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#fo:IngredientList">fo:IngredientList</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:ingredients a owl:ObjectProperty ;<br>    rdfs:label &quot;ingredients&quot;@en-gb ;<br>    rdfs:comment &quot;The ingredients property relates a recipe or recipe stage to an ingredient list.&quot;@en-gb ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range fo:IngredientList ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="fo:main_course" href="#fo:main_course">fo:main_course</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:main_course is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    The main course property relates a menu to a recipe that may be served as a main course.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#fo:Menu">fo:Menu</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#fo:Recipe">fo:Recipe</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:main_course a owl:ObjectProperty ;<br>    rdfs:label &quot;main course&quot;@en-gb ;<br>    rdfs:comment &quot;The main course property relates a menu to a recipe that may be served as a main course.&quot;@en-gb ;<br>    rdfs:domain fo:Menu ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range fo:Recipe ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="fo:method" href="#fo:method">fo:method</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:method is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    The method property relates a recipe or stage to the method used to make it.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#fo:Method">fo:Method</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:method a owl:ObjectProperty ;<br>    rdfs:label &quot;method&quot;@en-gb ;<br>    rdfs:comment &quot;The method property relates a recipe or stage to the method used to make it.&quot;@en-gb ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range fo:Method ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="fo:occasion" href="#fo:occasion">fo:occasion</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:occasion is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    The occassion property relates a recipe to an occasion it may be appropriate for.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#fo:Recipe">fo:Recipe</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#fo:Occasion">fo:Occasion</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:occasion a owl:ObjectProperty ;<br>    rdfs:label &quot;occassion&quot;@en-gb ;<br>    rdfs:comment &quot;The occassion property relates a recipe to an occasion it may be appropriate for.&quot;@en-gb ;<br>    rdfs:domain fo:Recipe ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range fo:Occasion ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="fo:produces" href="#fo:produces">fo:produces</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:produces is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    The produces property relates a recipe to the food it produces.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#fo:Recipe">fo:Recipe</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#fo:Food">fo:Food</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:produces a owl:ObjectProperty ;<br>    rdfs:label &quot;produces&quot;@en-gb ;<br>    rdfs:comment &quot;The produces property relates a recipe to the food it produces.&quot;@en-gb ;<br>    rdfs:domain fo:Recipe ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range fo:Food ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="fo:required_technique" href="#fo:required_technique">fo:required_technique</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:required_technique is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    The required technique property indicates that a particular technique is required in order to complete a recipe, method or step.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#fo:Technique">fo:Technique</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:required_technique a owl:ObjectProperty ;<br>    rdfs:label &quot;required technique&quot;@en-gb ;<br>    rdfs:comment &quot;The required technique property indicates that a particular technique is required in order to complete a recipe, method or step.&quot;@en-gb ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range fo:Technique ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="fo:serve_as" href="#fo:serve_as">fo:serve_as</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:serve_as is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    The serve as property relates a recipe to the course in a meal that it may be served as.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#fo:Recipe">fo:Recipe</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#fo:Course">fo:Course</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:serve_as a owl:ObjectProperty ;<br>    rdfs:label &quot;serve as&quot;@en-gb ;<br>    rdfs:comment &quot;The serve as property relates a recipe to the course in a meal that it may be served as.&quot;@en-gb ;<br>    rdfs:domain fo:Recipe ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range fo:Course ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="fo:shopping_category" href="#fo:shopping_category">fo:shopping_category</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:shopping_category is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    The shopping category property relates a food to the shopping category where that food is likely to be found when shopping for it.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#fo:Food">fo:Food</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#fo:ShoppingCategory">fo:ShoppingCategory</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:shopping_category a owl:ObjectProperty ;<br>    rdfs:label &quot;shopping category&quot;@en-gb ;<br>    rdfs:comment &quot;The shopping category property relates a food to the shopping category where that food is likely to be found when shopping for it.&quot;@en-gb ;<br>    rdfs:domain fo:Food ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range fo:ShoppingCategory ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="fo:side_dish" href="#fo:side_dish">fo:side_dish</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:side_dish is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    The side dish property relates a menu to a recipe that may be served as a side dish.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#fo:Menu">fo:Menu</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#fo:Recipe">fo:Recipe</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:side_dish a owl:ObjectProperty ;<br>    rdfs:label &quot;side dish&quot;@en-gb ;<br>    rdfs:comment &quot;The side dish property relates a menu to a recipe that may be served as a side dish.&quot;@en-gb ;<br>    rdfs:domain fo:Menu ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range fo:Recipe ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="fo:stages" href="#fo:stages">fo:stages</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:stages is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    The stages property relates a recipe to the sequence of stages it contains.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#fo:Recipe">fo:Recipe</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#fo:StageSequence">fo:StageSequence</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:stages a owl:ObjectProperty ;<br>    rdfs:label &quot;stages&quot;@en-gb ;<br>    rdfs:comment &quot;The stages property relates a recipe to the sequence of stages it contains.&quot;@en-gb ;<br>    rdfs:domain fo:Recipe ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range fo:StageSequence ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Object Property: <a name="fo:starter" href="#fo:starter">fo:starter</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:starter is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    The starter property relates a menu to a recipe that may be served as a starter.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#fo:Menu">fo:Menu</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#fo:Recipe">fo:Recipe</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:starter a owl:ObjectProperty ;<br>    rdfs:label &quot;starter&quot;@en-gb ;<br>    rdfs:comment &quot;The starter property relates a menu to a recipe that may be served as a starter.&quot;@en-gb ;<br>    rdfs:domain fo:Menu ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range fo:Recipe ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+			</div>
+
+			
+
+	
+
+
+
+
+
+
+
+	
+
+	
+
+		<hr class="margintop">
+		<h1 class="margintop"><a name="dataproperties">&nbsp;</a>Datatype Properties</h1>
+
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Datatype Property: <a name="base:atDateTime" href="#base:atDateTime">base:atDateTime</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> base:atDateTime is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#base:shopping">base:shopping</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#xsd:date">xsd:date</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>base:atDateTime a owl:DatatypeProperty ;<br>    rdfs:label &quot;the user shopped at this date-time&quot;@en ;<br>    rdfs:domain base:shopping ;<br>    rdfs:range xsd:date .</p>
+
+<p></p></code>
+				</div>
+
+
+			</div>
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Datatype Property: <a name="base:atPrice" href="#base:atPrice">base:atPrice</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> base:atPrice is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#base:food">base:food</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#xsd:float">xsd:float</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>base:atPrice a owl:DatatypeProperty ;<br>    rdfs:label &quot;food price&quot;@en ;<br>    rdfs:domain base:food ;<br>    rdfs:range xsd:float .</p>
+
+<p></p></code>
+				</div>
+
+
+			</div>
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Datatype Property: <a name="base:atTime" href="#base:atTime">base:atTime</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> base:atTime is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#base:shopping">base:shopping</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#xsd:float">xsd:float</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>base:atTime a owl:DatatypeProperty ;<br>    rdfs:label &quot;quantity bought&quot;@en ;<br>    rdfs:domain base:shopping ;<br>    rdfs:range xsd:float .</p>
+
+<p></p></code>
+				</div>
+
+
+			</div>
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Datatype Property: <a name="base:hasGoal" href="#base:hasGoal">base:hasGoal</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> base:hasGoal is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#base:user">base:user</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#xsd:string">xsd:string</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>base:hasGoal a owl:DatatypeProperty ;<br>    rdfs:label &quot;user goal&quot;@en ;<br>    rdfs:domain base:user ;<br>    rdfs:range xsd:string .</p>
+
+<p></p></code>
+				</div>
+
+
+			</div>
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Datatype Property: <a name="base:hasName" href="#base:hasName">base:hasName</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> base:hasName is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#base:user">base:user</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#xsd:string">xsd:string</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>base:hasName a owl:DatatypeProperty ;<br>    rdfs:label &quot;user name&quot;@en ;<br>    rdfs:domain base:user ;<br>    rdfs:range xsd:string .</p>
+
+<p></p></code>
+				</div>
+
+
+			</div>
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Datatype Property: <a name="base:hasShopAddress" href="#base:hasShopAddress">base:hasShopAddress</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> base:hasShopAddress is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#base:food">base:food</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#xsd:string">xsd:string</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>base:hasShopAddress a owl:DatatypeProperty ;<br>    rdfs:label &quot;grocery shop address&quot;@en ;<br>    rdfs:domain base:food ;<br>    rdfs:range xsd:string .</p>
+
+<p></p></code>
+				</div>
+
+
+			</div>
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Datatype Property: <a name="base:hasShopName" href="#base:hasShopName">base:hasShopName</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> base:hasShopName is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#base:food">base:food</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#xsd:string">xsd:string</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>base:hasShopName a owl:DatatypeProperty ;<br>    rdfs:label &quot;grocery shop name&quot;@en ;<br>    rdfs:domain base:food ;<br>    rdfs:range xsd:string .</p>
+
+<p></p></code>
+				</div>
+
+
+			</div>
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Datatype Property: <a name="base:hasShopType" href="#base:hasShopType">base:hasShopType</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> base:hasShopType is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#base:food">base:food</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#xsd:string">xsd:string</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>base:hasShopType a owl:DatatypeProperty ;<br>    rdfs:label &quot;grocery shop type (eg. mall, supermarket, shop)&quot;@en ;<br>    rdfs:domain base:food ;<br>    rdfs:range xsd:string .</p>
+
+<p></p></code>
+				</div>
+
+
+			</div>
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Datatype Property: <a name="base:ofCategory" href="#base:ofCategory">base:ofCategory</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> base:ofCategory is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#base:food">base:food</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#xsd:string">xsd:string</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>base:ofCategory a owl:DatatypeProperty ;<br>    rdfs:label &quot;food category&quot;@en ;<br>    rdfs:domain base:food ;<br>    rdfs:range xsd:string .</p>
+
+<p></p></code>
+				</div>
+
+
+			</div>
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Datatype Property: <a name="fo:imperial_quantity" href="#fo:imperial_quantity">fo:imperial_quantity</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:imperial_quantity is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    A metric quantity provides a value and imperial unit in a human readable string for use in measuring out an ingredient.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#fo:Ingredient">fo:Ingredient</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#xsd:string">xsd:string</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:imperial_quantity a owl:DatatypeProperty ;<br>    rdfs:label &quot;imperial quantity&quot;@en-gb ;<br>    rdfs:comment &quot;A metric quantity provides a value and imperial unit in a human readable string for use in measuring out an ingredient.&quot;@en-gb ;<br>    rdfs:domain fo:Ingredient ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range xsd:string ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+
+			</div>
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Datatype Property: <a name="fo:instruction" href="#fo:instruction">fo:instruction</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:instruction is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    An instruction provides the human-readable text associated with a step in the method for a recipe.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#fo:Step">fo:Step</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#xsd:string">xsd:string</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:instruction a owl:DatatypeProperty ;<br>    rdfs:label &quot;instruction&quot;@en-gb ;<br>    rdfs:comment &quot;An instruction provides the human-readable text associated with a step in the method for a recipe.&quot;@en-gb ;<br>    rdfs:domain fo:Step ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range xsd:string ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+
+			</div>
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Datatype Property: <a name="fo:metric_quantity" href="#fo:metric_quantity">fo:metric_quantity</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:metric_quantity is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    A metric quantity provides a value and metric unit in a human readable string for use in measuring out an ingredient.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#fo:Ingredient">fo:Ingredient</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#xsd:string">xsd:string</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:metric_quantity a owl:DatatypeProperty ;<br>    rdfs:label &quot;metric quantity&quot;@en-gb ;<br>    rdfs:comment &quot;A metric quantity provides a value and metric unit in a human readable string for use in measuring out an ingredient.&quot;@en-gb ;<br>    rdfs:domain fo:Ingredient ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range xsd:string ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+
+			</div>
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Datatype Property: <a name="fo:quantity" href="#fo:quantity">fo:quantity</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:quantity is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    A quantity provides a non-negative integer quantity that can be used as a measure of the food stuff for the ingredient.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#fo:Ingredient">fo:Ingredient</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#xsd:nonNegativeInteger">xsd:nonNegativeInteger</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:quantity a owl:DatatypeProperty ;<br>    rdfs:label &quot;quantity&quot;@en-gb ;<br>    rdfs:comment &quot;A quantity provides a non-negative integer quantity that can be used as a measure of the food stuff for the ingredient.&quot;@en-gb ;<br>    rdfs:domain fo:Ingredient ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range xsd:nonNegativeInteger ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+
+			</div>
+			
+
+			<div class="entity-div">
+
+				<h3 class="entity-section">Datatype Property: <a name="fo:serves" href="#fo:serves">fo:serves</a>
+					<small>&nbsp;&nbsp;<a href="#a-z" class="backlink">back to top</a></small>
+				</h3>
+				<hr>
+
+                
+                <p class="section-desc">
+                    <small>NOTE</small> fo:serves is a leaf node.</p>
+                
+
+				<p class="section-desc"><b>Description</b>
+                    <br>
+                    The server property indicates what the recipe is intended to serve, this is often a human readable integer range such as &#39;6-8&#39;.
+                </p>
+
+                
+
+				
+
+
+
+				
+
+				
+
+				
+					<p class="section-desc"><b>Class Domain for:</b>
+                        <br>
+                        <a href="#fo:Recipe">fo:Recipe</a>  </p>
+				
+
+				
+					<p class="section-desc"><b>Class Range for:</b>
+                        <br>
+                        <a href="#xsd:string">xsd:string</a>  </p>
+				
+
+
+                <small class="implementation_title">Implementation:</small>
+				<div class="implementation">
+					<code><p>@prefix base: &lt;http://polychrest/ontology#&gt; .<br>@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .<br>@prefix dcmit: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .<br>@prefix dctypes: &lt;http://purl.org/dc/dcmitype/&gt; .<br>@prefix fo: &lt;http://purl.org/ontology/fo/&gt; .<br>@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .<br>@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .<br>@prefix provenance: &lt;http://www.bbc.co.uk/ontologies/provenance/&gt; .<br>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .<br>@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .<br>@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .<br>@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .<br>@prefix v: &lt;http://rdf.data-vocabulary.org/#&gt; .<br>@prefix vann: &lt;http://purl.org/vocab/vann/&gt; .<br>@prefix void: &lt;http://rdfs.org/ns/void#&gt; .<br>@prefix vs: &lt;http://www.w3.org/2003/06/sw-vocab-status/ns#&gt; .<br>@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .<br>@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .</p>
+
+<p>fo:serves a owl:DatatypeProperty ;<br>    rdfs:label &quot;serves&quot;@en-gb ;<br>    rdfs:comment &quot;The server property indicates what the recipe is intended to serve, this is often a human readable integer range such as &#39;6-8&#39;.&quot;@en-gb ;<br>    rdfs:domain fo:Recipe ;<br>    rdfs:isDefinedBy fo: ;<br>    rdfs:range xsd:string ;<br>    vs:term_status &quot;testing&quot; .</p>
+
+<p></p></code>
+				</div>
+
+
+			</div>
+			
+
+	
+
+
+
+
+
+
+
+	
+
+	
+
+
+
+
+	
+
+
+	
+
+
+
+
+
+
+	<hr>
+	<small>Ontology documentation automatically generated by <a class="greylink"  href="http://lambdamusic.github.io/Ontospy/">Ontospy</a> on 10th March 2019 01:43</small>
+
+
+</body>
+</html>
